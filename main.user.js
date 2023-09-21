@@ -1,29 +1,29 @@
 // ==UserScript==
-// @name        DTF Show Me All Comments
+// @name        DTF Show me comments
 // @namespace   https://github.com/TentacleTenticals/
 // @match       https://dtf.ru/*
 // @grant       Tentacle Tenticals
-// @version     1.0.0
+// @version     1.0.1
 // @author      Tentacle Tenticals
 // @description Сасай кудасай
 // @homepage    https://github.com/TentacleTenticals/DTF-Show-Me-All-Comments
 // @updateURL   https://github.com/TentacleTenticals/DTF-Show-Me-All-Comments/raw/main/main.user.js
 // @downloadURL https://github.com/TentacleTenticals/DTF-Show-Me-All-Comments/raw/main/main.user.js
 //
-// @require     https://github.com/TentacleTenticals/dtf-libs-2.0/raw/main/libs/splitCls/classes.js
+// @require     https://github.com/TentacleTenticals/dtf-libs-2.0/raw/main/libs/splitCls/classes.js?
+//
 // @license MIT
 // ==/UserScript==
 /* jshint esversion:8 */
 
 (() => {
-  const obs = {};
-
   function checkForBtn(){
     if(!document.querySelector(`.page .comments`)) return;
     for(let i = 0, arr = document.querySelectorAll(`.page .comments .comments__show-all`), len = arr.length; i < len; i++){
       arr[i].click();
       console.log('Comments showed!!!');
     }
+    // document.querySelectorAll(`.comments .comments__show-all`).click();
   }
 
   function obsComments(mode){
@@ -37,7 +37,12 @@
       cfg: {attributes: false, childList: true, subtree: false, characterData: false},
       func: (item) => {
         if(!item.className) return;
+        console.log('OBS COMMENTS', item);
         checkForBtn();
+        // if(item.classList.value.match(/comments__show-all/)){
+        //   feedsSearch();
+          // console.log('FOUNDED!!!', item);
+        // }
       }
     });
   }
@@ -111,8 +116,8 @@
     })
   }
 
-  function run({page, status}){
-    if(page !== 'def' && status !== 'ready') return;
+  function run(c){
+    if(c.page !== 'def' && c.status !== 'ready') return;
     if(getPageType(document.location.href) === 'topics'){
       checkForBtn();
       !obs.comments ? obsComments('start') : obsComments('restart');
